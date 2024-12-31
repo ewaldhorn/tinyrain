@@ -21,19 +21,7 @@ tasks:
   build:
     desc: Builds the wasm component with TinyGo
     cmds:
-      - tinygo build -o {{.OUT_DIR}}/{{.TARGET_FILE}} -no-debug -target wasm ./{{.SRC_DIR}}/main.go
-    silent: true
-  buildGo:
-    desc: Builds the wasm component with standard Go (just to compare sizes out of interest)
-    cmds:
-      - GOOS=js GOARCH=wasm go build -ldflags="-s -w" -trimpath -o {{.OUT_DIR}}/withGo.wasm ./{{.SRC_DIR}}/main.go
-    silent: true
-  buildAll:
-    desc: Builds both the TinyGo and Go wasm binaries at once, then lists the files
-    cmds:
-      - task build
-      - task buildGo
-      - ls -ll {{.OUT_DIR}}
+      - tinygo build -o {{.OUT_DIR}}/{{.TARGET_FILE}} -no-debug -target wasm ./{{.SRC_DIR}}/.
     silent: true
   updateWasmExec:
     desc: Updates the wasm_exec.js file
