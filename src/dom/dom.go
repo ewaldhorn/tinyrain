@@ -15,7 +15,9 @@ func init() {
 }
 
 // ----------------------------------------------------------------------------
-func ConsoleLog(message string) {
+//
+// Log calls JavaScript console.log in the browser.
+func Log(message string) {
 	console.Call("log", message)
 }
 
