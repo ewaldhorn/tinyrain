@@ -4,6 +4,10 @@ import (
 	"tinyrain/src/dom"
 )
 
+// ----------------------------------------------------------------------------
+// bootstrap is a JavaScript-side defined function, called by Wasm in the main
+// Go function
+//
 //export bootstrap
 func bootstrap()
 
