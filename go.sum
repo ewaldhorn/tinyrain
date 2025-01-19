@@ -1,2 +1,4 @@
 github.com/ewaldhorn/dommie v0.0.0-20250119083744-75e7c292ff0f h1:+N43Xl4z3pMaAx6ZjnfXWVoVRFFF5uwz8STYqc9IB3U=
 github.com/ewaldhorn/dommie v0.0.0-20250119083744-75e7c292ff0f/go.mod h1:RH9yYkf323WiGbIT5PendwUTfECmXm1qdqDx0Um8vCY=
+github.com/ewaldhorn/tinycanvas v0.0.4 h1:fSKsD6b75KfXWQY2O6hQVE3rvfl0n6BGQ4FE7+U6Bjk=
+github.com/ewaldhorn/tinycanvas v0.0.4/go.mod h1:46jCgXnid/7/gARIA/15VKNsOj/efj7UdL29gaPPYkY=
