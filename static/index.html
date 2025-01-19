@@ -17,12 +17,14 @@
 
       let wasm;
 
+      // ----------------------------------------------------------------------
       go.importObject.env = {
         bootstrap: function () {
           document.getElementById("title").innerHTML = getVersion();
         },
       };
 
+      // ----------------------------------------------------------------------
       if ("instantiateStreaming" in WebAssembly) {
         WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(
           function (obj) {

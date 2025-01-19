@@ -1,8 +1,6 @@
 package main
 
-import (
-	"tinyrain/src/dom"
-)
+import "github.com/ewaldhorn/dommie/dom"
 
 // ----------------------------------------------------------------------------
 // bootstrap is a JavaScript-side defined function, called by Wasm in the main
