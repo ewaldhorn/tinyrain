@@ -35,8 +35,8 @@ func setupAnimation() {
 	droplets = make([]Droplet, dropletCount)
 	for dropletsMade < dropletCount {
 		for x := range width {
-			for y := range height / 10 {
-				if rand.Intn(100) > 80 && dropletsMade < dropletCount {
+			for y := range height {
+				if rand.Intn(100) > 55 && dropletsMade < dropletCount {
 					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(15)}
 					droplets[dropletsMade] = droplet
 					dropletsMade++
@@ -53,7 +53,7 @@ func updateDroplets() {
 		droplets[pos].y += droplets[pos].speed
 
 		if droplets[pos].y >= imageHeight {
-			droplets[pos].y = rand.Intn(6)
+			droplets[pos].y = rand.Intn(5)
 			droplets[pos].x = rand.Intn(canvasWidth)
 			droplets[pos].speed = 1 + rand.Intn(15)
 			droplets[pos].brightness = uint8(150 + rand.Intn(100))
