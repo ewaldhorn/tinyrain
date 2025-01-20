@@ -15,12 +15,26 @@
       const go = new Go(); // Defined in wasm_exec.js
       const WASM_URL = "tinyrain.wasm";
 
-      let wasm;
+      let wasm, exports;
 
       // ----------------------------------------------------------------------
       go.importObject.env = {
         bootstrap: function () {
           document.getElementById("title").innerHTML = getVersion();
+          fetch("dunes.jpg")
+            .then((response) => response.blob())
+            .then((blob) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const imageData = new Uint8Array(reader.result);
+                console.log(exports);
+                exports.passImageDataToWasm(
+                  imageData.length,
+                  imageData.byteOffset,
+                );
+              };
+              reader.readAsArrayBuffer(blob);
+            });
         },
       };
 
@@ -29,6 +43,7 @@
         WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(
           function (obj) {
             wasm = obj.instance;
+            exports = obj.instance.exports;
             go.run(wasm);
           },
         );
@@ -39,6 +54,7 @@
             WebAssembly.instantiate(bytes, go.importObject).then(
               function (obj) {
                 wasm = obj.instance;
+                exports = obj.instance.exports;
                 go.run(wasm);
               },
             ),
