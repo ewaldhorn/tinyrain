@@ -1,15 +1,26 @@
 package main
 
 import (
-	"math"
+	"math/rand"
+	"syscall/js"
 
 	"github.com/ewaldhorn/tinycanvas/colour"
 )
 
-var brightnessMap []byte
+// ----------------------------------------------------------------------------
+type Droplet struct {
+	x, y, speed, iteration int
+	brightness             uint8
+}
+
+const (
+	dropletCount = 100_000
+)
+
+var droplets []Droplet
 
 // ----------------------------------------------------------------------------
-func calculateBrightnessValues() {
+func setupAnimation() {
 	width := imageWidth
 	if width > canvasWidth {
 		width = canvasWidth
@@ -20,30 +31,47 @@ func calculateBrightnessValues() {
 		height = canvasHeight
 	}
 
-	brightnessMap = make([]byte, width*height)
-
-	for x := range width {
-		for y := range height {
-			offset := (x * 4) + (y * 4 * imageWidth)
-
-			// don't bother if we are outside our area
-			if offset < 0 || offset >= len(imageData) {
-				continue
+	dropletsMade := 0
+	droplets = make([]Droplet, dropletCount)
+	for dropletsMade < dropletCount {
+		for x := range width {
+			for y := range height / 10 {
+				if rand.Intn(100) > 80 && dropletsMade < dropletCount {
+					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(15)}
+					droplets[dropletsMade] = droplet
+					dropletsMade++
+				}
 			}
-
-			brigthness := calculateBrightness(imageData[offset], imageData[offset+1], imageData[offset+2])
-			brightnessMap[x+(y*width)] = brigthness
 		}
 	}
+	startAnimation()
 }
 
 // ----------------------------------------------------------------------------
-func calculateBrightness(r, g, b byte) byte {
-	tmpR := float64(r) * 0.299
-	tmpG := float64(g) * 0.587
-	tmpB := float64(b) * 0.144
+func updateDroplets() {
+	for pos := range droplets {
+		droplets[pos].y += droplets[pos].speed
 
-	return byte(math.Sqrt(tmpR+tmpG+tmpB) / 100)
+		if droplets[pos].y >= imageHeight {
+			droplets[pos].y = rand.Intn(6)
+			droplets[pos].x = rand.Intn(canvasWidth)
+			droplets[pos].speed = 1 + rand.Intn(15)
+			droplets[pos].brightness = uint8(150 + rand.Intn(100))
+		}
+
+	}
+	renderDroplets()
+}
+
+// ----------------------------------------------------------------------------
+func renderDroplets() {
+	mainCanvas.ClearScreen(*canvasBackgroundColour)
+	for _, droplet := range droplets {
+		offset := (droplet.x * 4) + (droplet.y * 4 * imageWidth)
+		col := colour.NewColour(imageData[offset], imageData[offset+1], imageData[offset+2], droplet.brightness)
+		mainCanvas.ColourPutPixel(droplet.x, droplet.y, *col)
+	}
+	mainCanvas.Render()
 }
 
 // ----------------------------------------------------------------------------
@@ -75,29 +103,9 @@ func renderOriginal() {
 }
 
 // ----------------------------------------------------------------------------
-func renderBrightness() {
-	width := imageWidth
-	if width > canvasWidth {
-		width = canvasWidth
-	}
-
-	height := imageHeight
-	if height > canvasHeight {
-		height = canvasHeight
-	}
-
-	for x := range width {
-		for y := range height {
-			offset := x + (y * width)
-
-			// don't bother if we are outside our area
-			if offset < 0 || offset >= len(imageData) {
-				continue
-			}
-
-			col := colour.NewColour(imageData[offset], imageData[offset+1], imageData[offset+2], imageData[offset+3])
-			mainCanvas.ColourPutPixel(x, y, *col)
-		}
-	}
-	mainCanvas.Render()
+func setRefreshEffectCallback() {
+	js.Global().Set("refreshEffect", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		updateDroplets()
+		return nil
+	}))
 }

@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	canvasWidth  = 800
-	canvasHeight = 600
+	canvasWidth  = 900
+	canvasHeight = 500
 )
 
 var mainCanvas *tinycanvas.TinyCanvas
+var canvasBackgroundColour *colour.Colour
 
 // ----------------------------------------------------------------------------
 // bootstrap is a JavaScript-side defined function, called by Wasm in the main
@@ -23,6 +24,9 @@ func bootstrap()
 //export loadimage
 func loadimage()
 
+//export startAnimation
+func startAnimation()
+
 // ----------------------------------------------------------------------------
 func main() {
 	dom.Log("Starting...")
@@ -30,12 +34,13 @@ func main() {
 	setCallbacks()
 	dom.Hide("loading")
 	bootstrap()
-
+	canvasBackgroundColour = colour.NewColourBlack()
 	mainCanvas = tinycanvas.NewTinyCanvas(canvasWidth, canvasHeight)
-	mainCanvas.ClearScreen(*colour.NewColourWhite())
+	mainCanvas.ClearScreen(*canvasBackgroundColour)
 	mainCanvas.Render()
 
 	loadimage()
+
 	// prevent the app for closing - it stays running for the life of the webpage
 	ch := make(chan struct{})
 	<-ch
@@ -47,4 +52,5 @@ func main() {
 func setCallbacks() {
 	setVersionCallback()
 	setLoadImageCallback()
+	setRefreshEffectCallback()
 }

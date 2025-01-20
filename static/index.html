@@ -17,6 +17,11 @@
 
       let wasm, exports;
 
+      let updateFunction = () => {
+        refreshEffect();
+        requestAnimationFrame(updateFunction);
+      };
+
       // ----------------------------------------------------------------------
       go.importObject.env = {
         bootstrap: function () {
@@ -43,6 +48,9 @@
             passImageDataToWasm(byteData, canvas.width, canvas.height);
           };
           img.src = "dunes.jpg";
+        },
+        startAnimation: function () {
+          updateFunction();
         },
       };
 

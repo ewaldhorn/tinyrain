@@ -24,7 +24,6 @@ func passImageDataToWasm(args []js.Value) interface{} {
 	length := uint8Array.Length()
 	imageData = make([]byte, length)
 	js.CopyBytesToGo(imageData, uint8Array)
-	calculateBrightnessValues()
-	renderBrightness()
+	setupAnimation()
 	return nil
 }
