@@ -6,6 +6,11 @@ import (
 	"github.com/ewaldhorn/tinycanvas/tinycanvas"
 )
 
+const (
+	canvasWidth  = 800
+	canvasHeight = 600
+)
+
 var mainCanvas *tinycanvas.TinyCanvas
 
 // ----------------------------------------------------------------------------
@@ -15,8 +20,8 @@ var mainCanvas *tinycanvas.TinyCanvas
 //export bootstrap
 func bootstrap()
 
-//export loadit
-func loadit()
+//export loadimage
+func loadimage()
 
 // ----------------------------------------------------------------------------
 func main() {
@@ -26,12 +31,11 @@ func main() {
 	dom.Hide("loading")
 	bootstrap()
 
-	mainCanvas = tinycanvas.NewTinyCanvas(800, 600)
+	mainCanvas = tinycanvas.NewTinyCanvas(canvasWidth, canvasHeight)
 	mainCanvas.ClearScreen(*colour.NewColourWhite())
-	mainCanvas.ColourCircle(300, 300, 100, *colour.NewRandomColour())
 	mainCanvas.Render()
 
-	loadit()
+	loadimage()
 	// prevent the app for closing - it stays running for the life of the webpage
 	ch := make(chan struct{})
 	<-ch
