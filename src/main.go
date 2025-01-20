@@ -15,6 +15,9 @@ var mainCanvas *tinycanvas.TinyCanvas
 //export bootstrap
 func bootstrap()
 
+//export loadit
+func loadit()
+
 // ----------------------------------------------------------------------------
 func main() {
 	dom.Log("Starting...")
@@ -24,10 +27,11 @@ func main() {
 	bootstrap()
 
 	mainCanvas = tinycanvas.NewTinyCanvas(800, 600)
-	mainCanvas.ClearScreen(*colour.NewRandomColour())
+	mainCanvas.ClearScreen(*colour.NewColourWhite())
 	mainCanvas.ColourCircle(300, 300, 100, *colour.NewRandomColour())
 	mainCanvas.Render()
 
+	loadit()
 	// prevent the app for closing - it stays running for the life of the webpage
 	ch := make(chan struct{})
 	<-ch
@@ -38,4 +42,5 @@ func main() {
 // ----------------------------------------------------------------------------
 func setCallbacks() {
 	setVersionCallback()
+	setLoadImageCallback()
 }
