@@ -4,7 +4,7 @@ version: "3"
 
 vars:
   SRC_DIR: src
-  OUT_DIR: static
+  OUT_DIR: docs
   TARGET_FILE: tinyrain.wasm
 
 tasks:
