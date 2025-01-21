@@ -14,7 +14,7 @@ type Droplet struct {
 }
 
 const (
-	dropletCount = 100_000
+	dropletCount = 120_000
 )
 
 var droplets []Droplet
@@ -34,9 +34,9 @@ func setupAnimation() {
 	dropletsMade := 0
 	droplets = make([]Droplet, dropletCount)
 	for dropletsMade < dropletCount {
-		for x := range width {
-			for y := range height {
-				if rand.Intn(100) > 55 && dropletsMade < dropletCount {
+		for y := range height {
+			for x := range width {
+				if rand.Intn(100) > 85 && dropletsMade < dropletCount {
 					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(15)}
 					droplets[dropletsMade] = droplet
 					dropletsMade++
