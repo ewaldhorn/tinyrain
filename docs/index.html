@@ -61,11 +61,17 @@
       };
 
       // ----------------------------------------------------------------------
+      // set up references to wasm instance objects
+      const setupReferences = (wasmObj) => {
+        wasm = wasmObj.instance;
+        exports = wasm.exports;
+      };
+
+      // ----------------------------------------------------------------------
       if ("instantiateStreaming" in WebAssembly) {
         WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(
           function (obj) {
-            wasm = obj.instance;
-            exports = obj.instance.exports;
+            setupReferences(obj);
             go.run(wasm);
           },
         );
@@ -75,8 +81,7 @@
           .then((bytes) =>
             WebAssembly.instantiate(bytes, go.importObject).then(
               function (obj) {
-                wasm = obj.instance;
-                exports = obj.instance.exports;
+                setupReferences(obj);
                 go.run(wasm);
               },
             ),
