@@ -14,40 +14,46 @@ type Droplet struct {
 }
 
 const (
-	dropletCount = 120_000
+	dropletCount    = 120_000
+	dropletMaxSpeed = 20
 )
 
 var droplets []Droplet
+var effectWidth, effectHeight int
 
 // ----------------------------------------------------------------------------
 func setupAnimation() {
-	width := imageWidth
-	if width > canvasWidth {
-		width = canvasWidth
+	// ensure width and height are within the canvas sizes
+	effectWidth = imageWidth
+	if effectWidth > canvasWidth {
+		effectWidth = canvasWidth
 	}
 
-	height := imageHeight
-	if height > canvasHeight {
-		height = canvasHeight
+	effectHeight = imageHeight
+	if effectHeight > canvasHeight {
+		effectHeight = canvasHeight
 	}
 
+	// now create "random" droplets
 	dropletsMade := 0
 	droplets = make([]Droplet, dropletCount)
 	for dropletsMade < dropletCount {
-		for y := range height {
-			for x := range width {
+		for y := range effectHeight {
+			for x := range effectWidth {
 				if rand.Intn(100) > 85 && dropletsMade < dropletCount {
-					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(15)}
+					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(dropletMaxSpeed)}
 					droplets[dropletsMade] = droplet
 					dropletsMade++
 				}
 			}
 		}
 	}
+
 	startAnimation()
 }
 
 // ----------------------------------------------------------------------------
+// Move droplets down by their speed, if they reach the bottom, reset them.
 func updateDroplets() {
 	for pos := range droplets {
 		droplets[pos].y += droplets[pos].speed
@@ -55,11 +61,12 @@ func updateDroplets() {
 		if droplets[pos].y >= imageHeight {
 			droplets[pos].y = rand.Intn(5)
 			droplets[pos].x = rand.Intn(canvasWidth)
-			droplets[pos].speed = 1 + rand.Intn(15)
+			droplets[pos].speed = 1 + rand.Intn(dropletMaxSpeed)
 			droplets[pos].brightness = uint8(150 + rand.Intn(100))
 		}
 
 	}
+
 	renderDroplets()
 }
 
@@ -75,19 +82,10 @@ func renderDroplets() {
 }
 
 // ----------------------------------------------------------------------------
+// Useful for debugging purposes
 func renderOriginal() {
-	width := imageWidth
-	if width > canvasWidth {
-		width = canvasWidth
-	}
-
-	height := imageHeight
-	if height > canvasHeight {
-		height = canvasHeight
-	}
-
-	for x := range width {
-		for y := range height {
+	for x := range effectWidth {
+		for y := range effectHeight {
 			offset := (x * 4) + (y * 4 * imageWidth)
 
 			// don't bother if we are outside our area
@@ -103,6 +101,7 @@ func renderOriginal() {
 }
 
 // ----------------------------------------------------------------------------
+// Allows JS to call into Wasm to refresh the effect.
 func setRefreshEffectCallback() {
 	js.Global().Set("refreshEffect", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		updateDroplets()
