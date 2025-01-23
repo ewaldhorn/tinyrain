@@ -49,6 +49,7 @@ func setupAnimation() {
 		}
 	}
 
+	renderOriginal()
 	startAnimation()
 }
 
@@ -59,12 +60,11 @@ func updateDroplets() {
 		droplets[pos].y += droplets[pos].speed
 
 		if droplets[pos].y >= imageHeight {
-			droplets[pos].y = rand.Intn(5)
+			droplets[pos].y = rand.Intn(10)
 			droplets[pos].x = rand.Intn(canvasWidth)
 			droplets[pos].speed = 1 + rand.Intn(dropletMaxSpeed)
 			droplets[pos].brightness = uint8(150 + rand.Intn(100))
 		}
-
 	}
 
 	renderDroplets()
@@ -72,7 +72,6 @@ func updateDroplets() {
 
 // ----------------------------------------------------------------------------
 func renderDroplets() {
-	mainCanvas.ClearScreen(*canvasBackgroundColour)
 	for _, droplet := range droplets {
 		offset := (droplet.x * 4) + (droplet.y * 4 * imageWidth)
 		col := colour.NewColour(imageData[offset], imageData[offset+1], imageData[offset+2], droplet.brightness)
@@ -82,7 +81,7 @@ func renderDroplets() {
 }
 
 // ----------------------------------------------------------------------------
-// Useful for debugging purposes
+// Renders the original image to the screen
 func renderOriginal() {
 	for x := range effectWidth {
 		for y := range effectHeight {
