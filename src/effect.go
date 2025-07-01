@@ -13,40 +13,46 @@ type Droplet struct {
 	brightness             uint8
 }
 
+// ----------------------------------------------------------------------------
 const (
 	dropletCount    = 120_000
 	dropletMaxSpeed = 20
 )
 
+// ----------------------------------------------------------------------------
 var droplets []Droplet
 var effectWidth, effectHeight int
 
 // ----------------------------------------------------------------------------
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// ----------------------------------------------------------------------------
 func setupAnimation() {
 	// ensure width and height are within the canvas sizes
-	effectWidth = imageWidth
-	if effectWidth > canvasWidth {
-		effectWidth = canvasWidth
-	}
-
-	effectHeight = imageHeight
-	if effectHeight > canvasHeight {
-		effectHeight = canvasHeight
-	}
+	effectWidth = minInt(imageWidth, canvasWidth)
+	effectHeight = minInt(imageHeight, canvasHeight)
 
 	// now create "random" droplets
 	dropletsMade := 0
 	droplets = make([]Droplet, dropletCount)
+
 	for dropletsMade < dropletCount {
-		for y := range effectHeight {
-			for x := range effectWidth {
-				if rand.Intn(100) > 85 && dropletsMade < dropletCount {
-					droplet := Droplet{x: x, y: y, brightness: uint8(150 + rand.Intn(100)), speed: 1 + rand.Intn(dropletMaxSpeed)}
-					droplets[dropletsMade] = droplet
-					dropletsMade++
-				}
-			}
+		x := rand.Intn(effectWidth)
+		y := rand.Intn(effectHeight)
+
+		droplet := Droplet{
+			x:          x,
+			y:          y,
+			brightness: uint8(150 + rand.Intn(100)),
+			speed:      1 + rand.Intn(dropletMaxSpeed),
 		}
+		droplets[dropletsMade] = droplet
+		dropletsMade++
 	}
 
 	renderOriginal()
@@ -83,9 +89,11 @@ func renderDroplets() {
 // ----------------------------------------------------------------------------
 // Renders the original image to the screen
 func renderOriginal() {
+	fourImageWidths := 4 * imageWidth
+
 	for x := range effectWidth {
 		for y := range effectHeight {
-			offset := (x * 4) + (y * 4 * imageWidth)
+			offset := (x * 4) + (y * 4 * fourImageWidths)
 
 			// don't bother if we are outside our area
 			if offset < 0 || offset >= len(imageData) {

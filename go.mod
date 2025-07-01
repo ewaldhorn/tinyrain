@@ -1,8 +1,8 @@
 module tinyrain
 
-go 1.23.5
+go 1.24.4
 
 require (
-	github.com/ewaldhorn/dommie v0.0.3
-	github.com/ewaldhorn/tinycanvas v0.0.9
+	github.com/ewaldhorn/dommie v0.0.4
+	github.com/ewaldhorn/tinycanvas v0.0.12
 )

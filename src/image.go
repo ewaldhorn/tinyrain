@@ -10,14 +10,14 @@ var imageWidth, imageHeight int
 
 // ----------------------------------------------------------------------------
 func setLoadImageCallback() {
-	js.Global().Set("passImageDataToWasm", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	js.Global().Set("passImageDataToWasm", js.FuncOf(func(this js.Value, args []js.Value) any {
 		passImageDataToWasm(args)
 		return nil
 	}))
 }
 
 // ----------------------------------------------------------------------------
-func passImageDataToWasm(args []js.Value) interface{} {
+func passImageDataToWasm(args []js.Value) any {
 	// get the image data and dimensions from the JS side
 	uint8Array := args[0]
 	imageWidth = args[1].Int()
