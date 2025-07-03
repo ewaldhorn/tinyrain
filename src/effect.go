@@ -14,6 +14,16 @@ type Droplet struct {
 }
 
 // ----------------------------------------------------------------------------
+func NewDroplet(x, y int) Droplet {
+	return Droplet{
+		x:          x,
+		y:          y,
+		brightness: uint8(150 + rand.Intn(100)),
+		speed:      1 + rand.Intn(dropletMaxSpeed),
+	}
+}
+
+// ----------------------------------------------------------------------------
 const (
 	dropletCount    = 120_000
 	dropletMaxSpeed = 20
@@ -44,14 +54,10 @@ func setupAnimation() {
 		x := rand.Intn(effectWidth)
 		y := rand.Intn(effectHeight)
 
-		droplet := Droplet{
-			x:          x,
-			y:          y,
-			brightness: uint8(150 + rand.Intn(100)),
-			speed:      1 + rand.Intn(dropletMaxSpeed),
-		}
+		droplet := NewDroplet(x, y)
 		droplets[i] = droplet
 	}
+
 	renderOriginal()
 	startAnimation()
 }
