@@ -38,10 +38,9 @@ func setupAnimation() {
 	effectHeight = minInt(imageHeight, canvasHeight)
 
 	// now create "random" droplets
-	dropletsMade := 0
 	droplets = make([]Droplet, dropletCount)
 
-	for dropletsMade < dropletCount {
+	for i := range droplets {
 		x := rand.Intn(effectWidth)
 		y := rand.Intn(effectHeight)
 
@@ -51,10 +50,8 @@ func setupAnimation() {
 			brightness: uint8(150 + rand.Intn(100)),
 			speed:      1 + rand.Intn(dropletMaxSpeed),
 		}
-		droplets[dropletsMade] = droplet
-		dropletsMade++
+		droplets[i] = droplet
 	}
-
 	renderOriginal()
 	startAnimation()
 }
@@ -110,7 +107,7 @@ func renderOriginal() {
 // ----------------------------------------------------------------------------
 // Allows JS to call into Wasm to refresh the effect.
 func setRefreshEffectCallback() {
-	js.Global().Set("refreshEffect", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	js.Global().Set("refreshEffect", js.FuncOf(func(this js.Value, args []js.Value) any {
 		updateDroplets()
 		return nil
 	}))
